@@ -1,2 +1,4 @@
-# Dynamic-Community-Tracking
-Implementation of : *"Greene, Derek, Donal Doyle, and Padraig Cunningham. "Tracking the evolution of communities in dynamic social networks." Advances in social networks analysis and mining (ASONAM), 2010 international conference on. IEEE, 2010."*
+# Group-Evolution-Method-GED-
+Implementation of the article: 
+
+*Bródka, Piotr, Stanisław Saganowski, and Przemysław Kazienko. "GED: the method for group evolution discovery in social networks." Social Network Analysis and Mining 3.1 (2013): 1-14.*
