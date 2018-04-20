@@ -1,0 +1,17 @@
+version: "3"
+services:
+  notebook:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    entrypoint: /bin/bash ./host_data/start-notebook.sh
+    volumes:
+      - ./jupyter_home:/home/jupyter/host_data
+    ports:
+      - "8889:8888"
+    expose:
+      - "8888"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure

@@ -2,3 +2,9 @@
 \.idea/
 
 sources/gloaders/__pycache__/
+
+jupyter_home/\.Trash-1000/
+
+jupyter_home/\.ipynb_checkpoints/
+
+*.pyc
