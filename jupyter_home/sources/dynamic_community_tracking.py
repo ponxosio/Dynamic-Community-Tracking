@@ -1,5 +1,6 @@
 from typing import Dict
 from typing import List
+from typing import Set
 from typing import Tuple
 
 from sources.gloaders.loader_interface import LoaderInterface
@@ -79,10 +80,13 @@ class DynamicCommunityTraking:
             actual_snapshot = snapshots[ts]
             front_temporal = {}
             already_matched = set()
+            already_merged = set()
 
             for comm in actual_snapshot.community_infomap():
                 comms_name = [actual_snapshot.vs[index]["name"] for index in comm]
                 matched_comms = self._match_community_front(front, comms_name)
+
+                matched_comms = matched_comms.difference(already_merged)
 
                 if len(matched_comms) == 0:
                     # Add new d community
@@ -91,7 +95,7 @@ class DynamicCommunityTraking:
 
                 elif len(matched_comms) == 1:
 
-                    dcomm_pair = matched_comms[0]
+                    dcomm_pair = matched_comms.pop()
                     if dcomm_pair in already_matched:
                         # splitting
                         update_front, new_index = DynamicCommunityTraking._process_split(d_communities, comms_name,
@@ -105,6 +109,8 @@ class DynamicCommunityTraking:
                     front_temporal.update(update_front)
                 else:
                     # merging
+                    already_merged = already_merged.union(matched_comms)
+
                     update_front = self._process_merge(d_communities, comms_name, matched_comms, ts)
                     front_temporal.update(update_front)
 
@@ -114,14 +120,14 @@ class DynamicCommunityTraking:
 
         return d_communities
 
-    def _match_community_front(self, front: FRONT, community: List[str]) -> List[int]:
+    def _match_community_front(self, front: FRONT, community: List[str]) -> Set[int]:
 
-        matched = []
+        matched = set()
         for dcom_id in front.keys():
             front_comm, _ = front[dcom_id]
             jaccard = jaccard_coefficient(front_comm, community)
             if jaccard > self.threshold:
-                matched.append(dcom_id)
+                matched.add(dcom_id)
 
         return matched
 
@@ -140,7 +146,7 @@ class DynamicCommunityTraking:
         for key in keys_to_remove:
             del front[key]
 
-    def _process_merge(self, dynamic_community: DY_COMMS, community: List[str], matches: List[int], ts: int) -> FRONT:
+    def _process_merge(self, dynamic_community: DY_COMMS, community: List[str], matches: Set[int], ts: int) -> FRONT:
         front = {}
 
         d_com_index_stay = min(matches)

@@ -29,7 +29,7 @@ class EventsPainter:
     def __init__(self, dynamic_coms: DY_COMMS):
         self.dynamic_coms = dynamic_coms
 
-    def make_events_graph(self):
+    def make_events_graph(self) -> igraph.Graph:
         g = igraph.Graph(directed=True)
 
         for i in range(len(self.dynamic_coms)):
@@ -38,6 +38,14 @@ class EventsPainter:
                 check = True
             self._add_nodes(g, i, check)
         return g
+
+    def paint_events(self, img_path: str):
+        g = self.make_events_graph()
+        visual_style = {"bbox": (1080, 900), "margin": 60, "vertex_size": 30, "vertex_label_size": 10,
+                        "vertex_color": "green", "edge_width": 0.5,
+                        "layout": g.layout_auto(), "vertex_label": g.vs["label"]}
+
+        igraph.plot(g, img_path, **visual_style)
 
     def _add_nodes(self, g: igraph.Graph, com_id: int, check: bool):
         events_by_ts = EventsPainter.split_by_ts(self.dynamic_coms[com_id])
