@@ -4,7 +4,7 @@ from typing import Set
 from typing import Tuple
 
 from sources.gloaders.loader_interface import LoaderInterface
-from sources.metrics import jaccard_coefficient
+from sources.tracker.metrics import jaccard_coefficient
 
 
 STEP_COM = Tuple[List[str], int, str]
